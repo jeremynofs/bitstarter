@@ -22,10 +22,11 @@ References:
 */
 
 var fs = require('fs');
+var util = require('util')
 var rest = require('restler');
 var program = require('commander');
 var cheerio = require('cheerio');
-var crypto = require('cryptop');
+var crypto = require('crypto');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
 var URL_DEFAULT = "http://localhost/index.html";
@@ -40,17 +41,26 @@ var assertFileExists = function(infile) {
     return instr;
 };
 
-var assertURLExists = function(inurl) {
-    rest.get(inurl).on('complete', function(result) {
+var buildfn = function(downloadedfile) {
+    console.error("Entering buildfn(%s)...", downloadedfile);
+    var response2console = function(result, response) {
+	console.error("Beginning of response2console: %s", response.message);
 	if (result instanceof Error) {
-	    console.log('Error: ' + result.message + '. Exiting.', result);
-	    process.exit(1);
+	    console.error('Error: ' + util.format(response.message));
 	} else {
-	    fs.writeFileSync(DOWNLOADED_TEMP, result);
+	    console.error("Wrote %s", downloadedfile);
+	    fs.writeFileSync(downloadedfile, result);
 	}
-    });
-    assertFileExists(DOWNLOADED_TEMP);
-    return DOWNLOADED_TEMP.toString();
+	console.error("I'm Here!");
+    };
+    return response2console;
+};
+
+var assertURLExists = function(inurl) {
+    var response2console = buildfn(DOWNLOADED_TEMP);
+    rest.get(inurl).on('complete', response2console);
+    console.error("I'm about to assert if %s exists. (Downloaded from %s)", DOWNLOADED_TEMP, inurl);
+    return assertFileExists(DOWNLOADED_TEMP);
 };
 	    
 
@@ -83,9 +93,14 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-        .option('-u, --url <url_to_file>', 'URL to html file', clone(assertURLExists), URL_DEFAULT)
+        .option('-u, --url <url_to_file>', 'URL to html file', clone(assertURLExists))
         .parse(process.argv);
-    var checkJson = checkHtmlFile(program.file, program.checks);
+    var checkJson;
+    if (program.url) {
+	checkJson = checkHtmlFile(DOWNLOADED_TEMP, program.checks);
+    } else {
+	checkJson = checkHtmlFile(program.file, program.checks);
+    }
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
 } else {
