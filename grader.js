@@ -22,10 +22,14 @@ References:
 */
 
 var fs = require('fs');
+var rest = require('restler');
 var program = require('commander');
 var cheerio = require('cheerio');
+var crypto = require('cryptop');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
+var URL_DEFAULT = "http://localhost/index.html";
+var DOWNLOADED_TEMP = crypto.randomBytes(4).readUInt32LE(0)+'.tmp';
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
@@ -35,6 +39,20 @@ var assertFileExists = function(infile) {
     }
     return instr;
 };
+
+var assertURLExists = function(inurl) {
+    rest.get(inurl).on('complete', function(result) {
+	if (result instanceof Error) {
+	    console.log('Error: ' + result.message + '. Exiting.', result);
+	    process.exit(1);
+	} else {
+	    fs.writeFileSync(DOWNLOADED_TEMP, result);
+	}
+    });
+    assertFileExists(DOWNLOADED_TEMP);
+    return DOWNLOADED_TEMP.toString();
+};
+	    
 
 var cheerioHtmlFile = function(htmlfile) {
     return cheerio.load(fs.readFileSync(htmlfile));
@@ -65,6 +83,7 @@ if(require.main == module) {
     program
         .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
         .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+        .option('-u, --url <url_to_file>', 'URL to html file', clone(assertURLExists), URL_DEFAULT)
         .parse(process.argv);
     var checkJson = checkHtmlFile(program.file, program.checks);
     var outJson = JSON.stringify(checkJson, null, 4);
