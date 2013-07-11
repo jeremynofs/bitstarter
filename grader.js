@@ -28,6 +28,15 @@ var rest = require('restler');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
 
+var callback = function(result) {
+  if (result instanceof Error) {
+    console.error("Error: %s", result.message);
+    this.retry(5000); //Try again after 5 seconds
+  } else {
+    console.error(result);
+  }
+};
+
 var loadChecks = function(checksfile) {
   return JSON.parse(fs.readFileSync(checksfile));
 };
