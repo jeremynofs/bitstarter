@@ -47,6 +47,10 @@ var checkHtmlFile = function(filename, checksfile) {
   return checkHtml(cheerio.load(fs.readFileSync(filename)), checksfile);
 };
 
+var checkURL = function(html, checksfile) {
+  return checkHtml(cheerio.load(html), checksfile);
+};
+
 var assertFileExists = function(filename) {
   var filename = filename.toString(); //cast to string
     if(!fs.existsSync(filename)) { //File doesn't exist
@@ -72,7 +76,7 @@ if(require.main == module) {
 
   if (program.url) { //Specified a URL to be checked
     rest.get(program.url).on('complete', function(result) {
-      checkJson = checkHtml(result, program.checks);
+      checkJson = checkURL(result, program.checks);
     });    
   } else { //Specified a local file (default)
       checkJson = checkHtmlFile(program.file, program.checks);
