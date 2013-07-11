@@ -84,7 +84,7 @@ if(require.main == module) {
   var checkJson;
 
   if (program.url) { //Specified a URL to be checked
-    checkJson = rest.get(program.url).on('complete', checkURL(result, program.checks));    
+    checkJson = rest.get(program.url).on('complete', function(result) { checkURL(result, program.checks) });    
   } else { //Specified a local file (default)
     checkJson = checkHtmlFile(program.file, program.checks);
   }
