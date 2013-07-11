@@ -28,22 +28,23 @@ var rest = require('restler');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
 
-var callback = function(result) {
-  if (result instanceof Error) {
-    console.error("Error: %s", result.message);
-    this.retry(5000); //Try again after 5 seconds
-  } else {
-    console.error(result);
-  }
+var download = function(url, callback) {
+  rest.get(url).on('complete', function(result) {
+    if (result instanceof Error) { // also when callback(result)
+      console.error("Error: %s", result.message);
+      return;
+    } else {
+      callback(null,result); //callback(error,html)
+    }
+  });
 };
 
 var loadChecks = function(checksfile) {
-  return JSON.parse(fs.readFileSync(checksfile));
+  return JSON.parse(fs.readFileSync(checksfile)).sort();
 };
 
-var checkHtml = function(html, checksfile) {
-  $ = html;
-  var checks = loadChecks(checksfile).sort();
+var checkHtml = function(html, checks) {
+  $ = cheerio.load(html);
   var out = {};
   for(var ii in checks) {
     var present = $(checks[ii]).length > 0; //is the current check present in the html?
@@ -52,12 +53,9 @@ var checkHtml = function(html, checksfile) {
   return out; //return JSON hash
 };
 
-var checkHtmlFile = function(filename, checksfile) {
-  return checkHtml(cheerio.load(fs.readFileSync(filename)), checksfile);
-};
-
-var checkURL = function(html, checksfile) {
-  return checkHtml(cheerio.load(html), checksfile);
+//Load local file and check it synchronously. For export only.
+var checkHtmlFile = function(filename, checks) {
+  return checkHtml(fs.readFileSync(filename), checks);
 };
 
 var assertFileExists = function(filename) {
@@ -81,19 +79,24 @@ if(require.main == module) {
     .option('-u, --url <URL>', 'URL to html file to be checked')
     .parse(process.argv);
 
-  var checkJson;
-
-  if (program.url) { //Specified a URL to be checked
-    checkJson = rest.get(program.url).on('complete', function(result) { checkURL(result, program.checks) });    
-  } else { //Specified a local file (default)
-    checkJson = checkHtmlFile(program.file, program.checks);
+  function checkIt(error, html) {
+    if(error) {
+      console.error("Error getting html: %s", error);
+      process.exit(1);
+    }
+    // Stuff that happens each time goes here
+    var checks = loadChecks(program.checks);
+    var checkJson = checkHtml(html, checks); //new function
+    var outJson = JSON.stringify(checkJson, null, 4);
+    console.log(outJson);
   }
 
-  var outJson = JSON.stringify(checkJson, null, 4);
-  console.log(outJson);
+  program.url ? 
+      download(program.url, checkIt)        //Download url and check it
+    : fs.readFile(program.file, checkIt);   //Asynchronous now for local files, too
+
 } else { //exports
   exports.checkHtmlFile = checkHtmlFile;
-  exports.checkHtml = checkHtml;
 }
 
 
