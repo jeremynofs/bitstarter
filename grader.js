@@ -22,87 +22,65 @@ References:
 */
 
 var fs = require('fs');
-var util = require('util')
-var rest = require('restler');
 var program = require('commander');
 var cheerio = require('cheerio');
-var crypto = require('crypto');
+var rest = require('restler');
 var HTMLFILE_DEFAULT = "index.html";
 var CHECKSFILE_DEFAULT = "checks.json";
-var URL_DEFAULT = "http://localhost/index.html";
-var DOWNLOADED_TEMP = crypto.randomBytes(4).readUInt32LE(0)+'.tmp';
-
-var assertFileExists = function(infile) {
-    var instr = infile.toString();
-    if(!fs.existsSync(instr)) {
-        console.log("%s does not exist. Exiting.", instr);
-        process.exit(1); // http://nodejs.org/api/process.html#process_process_exit_code
-    }
-    return instr;
-};
-
-var buildfn = function(downloadedfile) {
-    console.error("Entering buildfn(%s)...", downloadedfile);
-    var response2console = function(result, response) {
-	console.error("Beginning of response2console: %s", response.message);
-	if (result instanceof Error) {
-	    console.error('Error: ' + util.format(response.message));
-	} else {
-	    console.error("Wrote %s", downloadedfile);
-	    fs.writeFileSync(downloadedfile, result);
-	}
-	console.error("I'm Here!");
-    };
-    return response2console;
-};
-
-var assertURLExists = function(inurl) {
-    var response2console = buildfn(DOWNLOADED_TEMP);
-    rest.get(inurl).on('complete', response2console);
-    console.error("I'm about to assert if %s exists. (Downloaded from %s)", DOWNLOADED_TEMP, inurl);
-    return assertFileExists(DOWNLOADED_TEMP);
-};
-	    
-
-var cheerioHtmlFile = function(htmlfile) {
-    return cheerio.load(fs.readFileSync(htmlfile));
-};
 
 var loadChecks = function(checksfile) {
-    return JSON.parse(fs.readFileSync(checksfile));
+  return JSON.parse(fs.readFileSync(checksfile));
 };
 
-var checkHtmlFile = function(htmlfile, checksfile) {
-    $ = cheerioHtmlFile(htmlfile);
-    var checks = loadChecks(checksfile).sort();
-    var out = {};
-    for(var ii in checks) {
-        var present = $(checks[ii]).length > 0;
-        out[checks[ii]] = present;
+var checkHtml = function(html, checksfile) {
+  $ = html;
+  var checks = loadChecks(checksfile).sort();
+  var out = {};
+  for(var ii in checks) {
+    var present = $(checks[ii]).length > 0; //is the current check present in the html?
+    out[checks[ii]] = present; //populate JSON hash
+  }
+  return out; //return JSON hash
+};
+
+var checkHtmlFile = function(filename, checksfile) {
+  return checkHtml(cheerio.load(fs.readFileSync(filename)), checksfile);
+};
+
+var assertFileExists = function(filename) {
+  var filename = filename.toString(); //cast to string
+    if(!fs.existsSync(filename)) { //File doesn't exist
+      console.log("%s does not exist. Exiting.", filename);
+      process.exit(1); // http://nodejs.org/api/process.html#process_process_exit_code
     }
-    return out;
+  return filename;
 };
 
 var clone = function(fn) {
-    // Workaround for commander.js issue.
-    // http://stackoverflow.com/a/6772648
-    return fn.bind({});
+  //Workaround for commander.js issue. See http://stackoverflow.com/a/67772648
+  return fn.bind({});
 };
 
 if(require.main == module) {
-    program
-        .option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
-        .option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
-        .option('-u, --url <url_to_file>', 'URL to html file', clone(assertURLExists))
-        .parse(process.argv);
-    var checkJson;
-    if (program.url) {
-	checkJson = checkHtmlFile(DOWNLOADED_TEMP, program.checks);
-    } else {
-	checkJson = checkHtmlFile(program.file, program.checks);
-    }
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
-} else {
-    exports.checkHtmlFile = checkHtmlFile;
+  program
+    .option('-c, --checks <check_file>', 'Path to check file', clone(assertFileExists), CHECKSFILE_DEFAULT)
+    .option('-f, --file <html_file>', 'Path to html file to be checked', clone(assertFileExists), HTMLFILE_DEFAULT)
+    .option('-u, --url <URL>', 'URL to html file to be checked')
+    .parse(process.argv);
+
+  var checkJson;
+
+  if (program.url) { //Specified a URL to be checked
+    
+  } else { //Specified a local file (default)
+      checkJson = checkHtmlFile(program.file, program.checks);
+  }
+
+  var outJson = JSON.stringify(checkJson, null, 4);
+  console.log(outJson);
+} else { //exports
+  exports.checkHtmlFile = checkHtmlFile;
+  exports.checkHtml = checkHtml;
 }
+
+
