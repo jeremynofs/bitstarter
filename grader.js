@@ -86,7 +86,7 @@ if(require.main == module) {
     }
     // Stuff that happens each time goes here
     var checks = loadChecks(program.checks);
-    var checkJson = checkHtml(html, checks); //new function
+    var checkJson = checkHtml(html, checks); //refactored checkHtmlFile function
     var outJson = JSON.stringify(checkJson, null, 4);
     console.log(outJson);
   }
