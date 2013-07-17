@@ -15,6 +15,22 @@
         body {
           padding-top: 60px;
         }
+        .linediv-l {
+          border-right: 1px white solid;
+        }
+        .linediv-r {
+          border-left: 1px white solid;
+        }        
+      }
+
+      /* Landscape phone and down */
+      @media (max-width: 480px) {
+        .linediv-l {
+          border-bottom: 1px white solid;
+        }
+        .linediv-r {
+          border-top: 1px white solid;
+        }
       }
 
       /* All form factors */
@@ -107,6 +123,7 @@
         <div class="span8 offset2">
           <div class="statistics">
             <div class="span4">
+              <!-- linediv-l and linediv-r give dividing lines that look different in horizontal and vertical layouts -->
               <div class="linediv-l">
                 <h3>1325</h3> <p>backers</p>
               </div>
