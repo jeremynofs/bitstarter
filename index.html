@@ -12,6 +12,7 @@
     <link href="http://fonts.googleapis/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" rel="stylesheet" type="text/css" />
     <link href="http://fonts.googleapis/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" 
     rel="stylesheet" type="text/css"/>
+    <link href='http://fonts.googleapis.com/css?family=Finger+Paint' rel='stylesheet' type='text/css'>
     <style type="text/css">
       
       /* Large desktop */
@@ -47,7 +48,7 @@
         font-family: 'Open Sans', Helvetica, Arial, sans-serif;
       }
       .heading, .subheading {
-        font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+        font-family: 'Finger Paint', Helvetica, Arial, sans-serif;
         text-align: center;
       }
       p.lead {
@@ -71,8 +72,11 @@
         background-color: #343434;
         padding: 3% 0%;
       }
-      .video, .thermomter, .order, .social, .statistics {
+      .video, .thermometer, .order, .social, .statistics {
         text-align: center;
+      }
+      .thermometer {
+        margin: 0% 2%;
       }
       .statistics h3, .statistics p {
         color: white;
@@ -133,23 +137,24 @@
       <!-- www.google.com/fonts/specimen/Ubuntu#pairing -->
       <div class="row-fluid heading">
         <div class="span12">
-          <h1>Product</h1>
+          <h1>POgS - Point of Garage Sale</h1>
         </div>
       </div>
       <div class="row-fluid subheading">
         <div class="span12">
           <!-- Special typography from Bootstrap for lead paragraph. -->
           <!-- http://twitter.github.io/bootstrap/base-css.html#typography -->
-          <p class="lead">One sentence description.</p>
+          <p class="lead">Easy to use POS System for Garage Sellers!</p>
         </div>
       </div>
       <div class="row-fluid pitch">
-        <div class="span5 offset1 video">
+<!--         <div class="span5 offset1 video">
           <img class="img-polaroid" src="http://placehold.it/480x300">
-        </div>
+        </div> -->
 
         <!-- Define a new 'actions' div to contain the statistics, order, and share buttons -->
-        <div class="span5 actions">
+        <!-- <div class="span5 actions"> -->
+        <div class="span8 offset2 actions img-polaroid img-rounded">
           <div class="span8 offset2">
             <div class="statistics">
               <div class="span4">
@@ -157,17 +162,17 @@
 
 
                 <div class="linediv-l">
-                  <h3>1325</h3> <p>backers</p>
+                  <h3>0</h3> <p>backers</p>
                 </div>
               </div>
               <div class="span4">
                 <div class="linediv-c">
-                  <h3>$7225</h3> <p>of $10,000</p>
+                  <h3>$0</h3> <p>of $2,000</p>
                 </div>
               </div>
               <div class="span4">
                 <div class="linediv-r">
-                  <h3>13</h3> <p>days left</p>
+                  <h3>90</h3> <p>days left</p>
                 </div>
               </div>
             </div>
@@ -176,8 +181,8 @@
             <!-- Bootstrap progress bar -->
             <!-- http://twitter.github.io/bootstrap/component.html#progress -->
             <div class="thermometer progress active">
-              <div class="bar bar-success" style="width: 72%"></div>
-              <div class="bar bar-warning" style="width: 28%"></div>
+              <div class="bar bar-success" style="width: 0%"></div>
+              <div class="bar bar-warning" style="width: 100%"></div>
             </div>
           </div>
           <div class="span6 offset3 order">
@@ -199,21 +204,30 @@
       <!-- http://placehold.it -->
       <div class="row-fluid section1">
         <div class="span5 offset1 asset">
-          <img class="img-polaroid" src="http://placehold.it/480x300">
+          <a href="http://imgur.com/8xdKn2O"><img class="img-polaroid img-rounded" src="http://i.imgur.com/8xdKn2O.jpg?2" title="Hosted by imgur.com"/></a>
+          <!-- <img class="img-polaroid" src="http://placehold.it/480x300"> -->
         </div>
         <div class="span5 copy">
-          <p>Bacon ipsum dolor sit amet swine consectetur nulla, salami velit aliquip chicken reprehenderit drumstick. Doner jerky consectetur eiusmod boudin non duis. Velit commodo ea, biltong do sausage turkey meatloaf fugiat sirloin filet mignon swine sint tail ribeye. Fugiat ad labore, sausage drumstick biltong aliqua pariatur ut chuck ham hock andouille pork belly. Meatloaf pork culpa flank fugiat drumstick, minim sunt.
+          <p>Take some of the hassle away from running a large and successful garage sale, yard sale, rummage sale, tag sale, lawn sale, attic sale, moving sale, garbage sale, thrift sale, junk sale or whatever you call it in your neck of the woods.
+          </p>
+          <p>We will make it easy to run your sale, by providing a checkout interface to easily make change, deal with hagglers, and make sure each seller gets their right share at the end of the sale.
           </p>
         </div>
       </div>
 
       <div class="row-fluid section2">
         <div class="span5 offset1 copy copy-right">
-          <p>Beef ribs tenderloin cillum esse dolor ball tip. Drumstick consectetur esse magna ham hock venison in est aliqua dolore shankle capicola. Dolor pork belly culpa, est salami drumstick leberkas in sunt swine. Culpa nisi incididunt prosciutto enim tongue.
-          </p>
+          <ul class="features">
+            <li>Accept Credit Cards with no special hardware at low rates!</li>
+            <li>Advertise to Facebook, Twitter, and Craigslist!</li>
+            <li>Track for multi family sales!</li>
+            <li>Credit sales automatically post to each family's bank account!</li>
+            <li>Discount at time of sale, and spreads discount amongst sellers</li>
+            <li>Run early bird, last day, or last hour specials</li>
+          </ul>
         </div>
         <div class="span5 asset">
-          <img class="img-polaroid" src="http://placehold.it/480x300">
+          <a href="http://imgur.com/KBVHFk7"><img class="img-polaroid img-rounded" src="http://i.imgur.com/KBVHFk7.jpg?2" title="Hosted by imgur.com"/></a>
         </div>
       </div>
 
@@ -224,26 +238,37 @@
             <div class="accordian-group">
               <div class="accordian-heading">
                 <a class="accordian-toggle" data-toggle="collapse" data-parent="#accordian2" href="#collapseOne">
-                  What does FAQ stand for?
+                  Will I need a credit merchant account from my bank?
                 </a>
               </div>
               <div id="collapseOne" class="accordian-body collapse">
                 <div class="accordian-inner">
-                  Frequently Asked Question.
+                  No! Through our partner, Stripe, we are able to offer per swipe transactions with no minimum. Sign up right through our app.
                 </div>
               </div>
             </div>
             <div class="accordian-group">
               <div class="accordian-heading">
                 <a class="accordian-toggle" data-toggle="collapse" data-parent="#accordian2" href="#collapseTwo">
-                  What's a &ldquo;Frequently Asked Question&rdquo;?
+                  Are the credit transactions secure?
                 </a>
               </div>
               <div id="collapseTwo" class="accordian-body collapse">
                 <div class="accordian-inner">
-                  A queston which is commonly asked by users.
+                  Yes! However, you will want to make sure you are connected to a secure wireless hotspot of your own. 3G and 4G is relatively safe, but look out for any unmarked vans in the neighborhood.
                 </div>
               </div>
+<!--             <div class="accordian-group">
+              <div class="accordian-heading">
+                <a class="accordian-toggle" data-toggle="collapse" data-parent="#accordian2" href="#collapseTwo">
+                  Are the credit transactions secure?
+                </a>
+              </div>
+              <div id="collapseTwo" class="accordian-body collapse">
+                <div class="accordian-inner">
+                  Yes! However, you will want to make sure you are connected to a secure wireless hotspot of your own. 3G and 4G is relatively safe, but look out for any unmarked vans in the neighborhood.
+                </div>
+              </div> -->
             </div>
           </div>
         </div>
@@ -251,7 +276,7 @@
 
       <div class="row-fluid footer">
         <div class="span12">
-          <p>This work is licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-SA 3.0</a>, without all the cruft that would otherwise be put at the bottom of the page.</p>
+          <p>This website is licensed under the <a href="http://creativecommons.org/licenses/by-sa/3.0/">CC-SA 3.0</a>, without all the cruft that would otherwise be put at the bottom of the page. However, the license to the actual software is yet to be determined.</p>
         </div>
       </div><!--./footer -->
     </div> <!--./container -->
